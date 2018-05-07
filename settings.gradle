@@ -1,0 +1,5 @@
+rootProject.name = 'springwebflux-websockets-example'
+include 'ticker-service'
+include 'ticker-client'
+include 'ticker-webclient'
+
