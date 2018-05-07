@@ -1,8 +1,17 @@
 plugins {
+    id 'com.gradle.build-scan' version '1.13.1'
+}
 
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+    publishAlways()
 }
 
 allprojects {
+    group = 'com.github.gregwhitaker'
+    version = '0.1.0'
+
     repositories {
         jcenter()
         mavenCentral()
