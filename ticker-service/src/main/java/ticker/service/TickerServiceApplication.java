@@ -8,8 +8,8 @@ import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
-import ticker.service.handler.TickerWebsocketHandler;
-import ticker.service.handler.TickersWebsocketHandler;
+import ticker.service.handler.TickerHandler;
+import ticker.service.handler.AllTickersHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class TickerServiceApplication {
 
     @Bean
     @Autowired
-    public HandlerMapping handlerMapping(TickersWebsocketHandler tickersHandler, TickerWebsocketHandler tickerHandler) {
+    public HandlerMapping handlerMapping(AllTickersHandler tickersHandler, TickerHandler tickerHandler) {
         Map<String, WebSocketHandler> map = new HashMap<>();
         map.put("/tickers", tickersHandler);
         map.put("/tickers/{id}", tickerHandler);

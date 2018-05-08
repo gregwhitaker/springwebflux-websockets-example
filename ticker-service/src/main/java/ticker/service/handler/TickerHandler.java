@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Mono;
-import ticker.service.service.QuoteService;
+import ticker.service.service.TickService;
 
 @Component
-public class TickersWebsocketHandler implements WebSocketHandler {
+public class TickerHandler implements WebSocketHandler {
 
     @Autowired
-    private QuoteService quoteService;
+    private TickService quoteService;
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
