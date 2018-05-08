@@ -3,20 +3,15 @@ package ticker.service.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
-import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ticker.service.handler.model.TickRequest;
 import ticker.service.service.TickService;
-import ticker.service.service.model.Tick;
 
 import java.io.IOException;
-import java.util.function.Function;
 
 @Component
 public class TickerHandler implements WebSocketHandler {
