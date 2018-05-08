@@ -1,20 +1,49 @@
 package ticker.service.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
+import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import ticker.service.handler.model.TickRequest;
 import ticker.service.service.TickService;
+import ticker.service.service.model.Tick;
+
+import java.io.IOException;
+import java.util.function.Function;
 
 @Component
 public class TickerHandler implements WebSocketHandler {
 
     @Autowired
-    private TickService quoteService;
+    private TickService tickService;
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
-        return null;
+        return session.send(session.receive()
+                .map(webSocketMessage -> {
+                    try {
+                        ObjectReader reader = mapper.readerFor(TickRequest.class);
+                        return (TickRequest) reader.readValue(webSocketMessage.getPayloadAsText());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .map(tickRequest -> tickService.get(tickRequest.getSymbol()))
+                .flatMap(tickFlux -> tickFlux.map(tick -> {
+                    try {
+                        return session.textMessage(mapper.writeValueAsString(tick));
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                })));
     }
 }
