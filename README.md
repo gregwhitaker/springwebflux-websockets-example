@@ -1,5 +1,7 @@
 # springwebflux-websockets-example
 
+An example of a reactive application using WebSockets and [Spring WebFlux](https://docs.spring.io/spring/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/web-reactive.html).
+
 ## License
 MIT License
 
