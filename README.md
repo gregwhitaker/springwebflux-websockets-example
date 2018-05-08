@@ -2,6 +2,9 @@
 
 An example of a reactive application using WebSockets and [Spring WebFlux](https://docs.spring.io/spring/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/web-reactive.html).
 
+## Bugs and Feedback
+For bugs, questions, and discussions please use the [Github Issues](https://github.com/gregwhitaker/springwebflux-websockets-example/issues).
+
 ## License
 MIT License
 
