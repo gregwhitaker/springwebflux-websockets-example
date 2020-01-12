@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 import reactor.core.scheduler.Schedulers;
 import ticker.service.service.model.Tick;
 import ticker.service.util.RandomUtil;
@@ -14,6 +15,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 @Service
 public class TickService {
@@ -21,21 +24,25 @@ public class TickService {
 
     private final Collection<String> symbols = new HashSet<>();
     private final Map<String, EvictingQueue<Tick>> history = new ConcurrentHashMap<>();
+    private final Flux<Tick> updates;
 
     public TickService() {
         initialize();
 
-        Flux.interval(Duration.ofMillis(1000L))
+        this.updates = Flux.interval(Duration.ofMillis(1000L))
                 .flatMap(aLong -> Flux.range(1, 5).map(cnt -> RandomUtil.choice(symbols)))
                 .map(s -> {
                     Tick prevTick = history.get(s).peek();
-                    return new Tick(s, prevTick.getName(),
-                            RandomUtil.bump(prevTick.getPrice()),
-                            RandomUtil.bump(prevTick.getVolume()));
+                    Tick nextTick = new Tick(s, prevTick.getName(), RandomUtil.bump(prevTick.getPrice()), RandomUtil.bump(prevTick.getVolume()));
 
-                })
+                    history.get(prevTick.getName()).add(nextTick);
+
+                    return nextTick;
+                });
+
+        this.updates
                 .subscribeOn(Schedulers.newElastic("price-worker"))
-                .subscribe(tick -> history.get(tick.getName()).add(tick));
+                .subscribe();
     }
 
     private void initialize() {
@@ -108,15 +115,32 @@ public class TickService {
         LOGGER.info("Market Data Initialization Completed");
     }
 
-    public Flux<Tick> getAll() {
-        return Flux.interval(Duration.ofMillis(1000L))
-                .onBackpressureDrop()
-                .map(aLong -> {
-                   return null;
+    public Flux<Tick> getAll(boolean historical) {
+        return Flux.create(tickFluxSink -> {
+            if (historical) {
+                history.forEach((key, value) -> {
+                    if (value != null && value.peek() != null) {
+                        tickFluxSink.next(value.peek());
+                    }
                 });
+            }
+
+            updates.subscribe(tickFluxSink::next);
+        });
     }
 
     public Flux<Tick> get(String symbol) {
-        return null;
+        return Flux.create(tickFluxSink -> {
+            if (history.get(symbol) != null) {
+                Tick tick = history.get(symbol).peek();
+
+                if (tick != null) {
+                    tickFluxSink.next(tick);
+                }
+            }
+
+            updates.filter(tick -> tick.getSymbol().equalsIgnoreCase(symbol))
+                    .subscribe(tickFluxSink::next);
+        });
     }
 }
