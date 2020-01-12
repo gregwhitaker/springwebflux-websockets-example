@@ -32,7 +32,6 @@ public class RandomUtil {
     }
 
     public static long bump(long num) {
-        double pct = ThreadLocalRandom.current().nextDouble(-1.0, 1.0);
-        return (long) (num + (num * pct));
+        return (long) (num + (num * ThreadLocalRandom.current().nextDouble(-1.0, 1.0)));
     }
 }
