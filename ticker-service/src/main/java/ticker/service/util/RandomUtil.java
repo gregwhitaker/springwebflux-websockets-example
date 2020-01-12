@@ -9,15 +9,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomUtil {
 
     public static <E> E choice(Collection<? extends E> coll) {
-        return choice(coll, ThreadLocalRandom.current());
-    }
-
-    public static <E> E choice(Collection<? extends E> coll, Random rand) {
         if (coll.size() == 0) {
             throw new IllegalArgumentException("Collection is empty");
         }
 
-        int index = rand.nextInt(coll.size());
+        int index = ThreadLocalRandom.current().nextInt(coll.size());
         if (coll instanceof List) { // optimization
             return ((List<? extends E>) coll).get(index);
         } else {
