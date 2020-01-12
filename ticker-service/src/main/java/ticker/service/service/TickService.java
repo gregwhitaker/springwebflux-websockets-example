@@ -29,6 +29,8 @@ public class TickService {
     }
 
     private void initialize() {
+        LOGGER.info("Initializing Market Data...");
+
         history.put("MMM", EvictingQueue.create(10));
         history.put("AXP", EvictingQueue.create(10));
         history.put("AAPL", EvictingQueue.create(10));
@@ -90,6 +92,8 @@ public class TickService {
         history.get("VZ").add(new Tick("VZ","Verizon",46.38,23081083L,0F));
         history.get("V").add(new Tick("V","Visa",130.84,6119361L,0F));
         history.get("WMT").add(new Tick("WMT","Wal-Mart",83.06,32257436L,0F));
+
+        LOGGER.info("Market Data Initialization Completed");
     }
 
     public Flux<Tick> getAll() {
