@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 import ticker.service.service.model.Tick;
+import ticker.service.util.RandomUtil;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -25,10 +26,16 @@ public class TickService {
         initialize();
 
         Flux.interval(Duration.ofMillis(1000L))
+                .flatMap(aLong -> Flux.range(1, 5).map(cnt -> RandomUtil.choice(symbols)))
+                .map(s -> {
+                    Tick prevTick = history.get(s).peek();
+                    return new Tick(s, prevTick.getName(),
+                            RandomUtil.bump(prevTick.getPrice()),
+                            RandomUtil.bump(prevTick.getVolume()));
+
+                })
                 .subscribeOn(Schedulers.newElastic("price-worker"))
-                .subscribe(v -> {
-                    LOGGER.info("Updating Prices");
-                });
+                .subscribe(tick -> history.get(tick.getName()).add(tick));
     }
 
     private void initialize() {
