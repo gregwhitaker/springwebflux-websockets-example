@@ -9,16 +9,13 @@ public class Tick {
     private final String name;
     private final Double price;
     private final Long volume;
-    private final Float netChange;
 
-    public Tick(final String symbol, final String name, final Double price,
-                final Long volume, final Float netChange) {
+    public Tick(final String symbol, final String name, final Double price, final Long volume) {
         this.timestamp = Instant.now();
         this.symbol = symbol;
         this.name = name;
         this.price = price;
         this.volume = volume;
-        this.netChange = netChange;
     }
 
     public Instant getTimestamp() {
@@ -39,9 +36,5 @@ public class Tick {
 
     public Long getVolume() {
         return volume;
-    }
-
-    public Float getNetChange() {
-        return netChange;
     }
 }
