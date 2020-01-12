@@ -7,10 +7,9 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomUtil {
-    private static final Random RAND = new Random(System.currentTimeMillis());
 
     public static <E> E choice(Collection<? extends E> coll) {
-        return choice(coll, RAND);
+        return choice(coll, ThreadLocalRandom.current());
     }
 
     public static <E> E choice(Collection<? extends E> coll, Random rand) {
