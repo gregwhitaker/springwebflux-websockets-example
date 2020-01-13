@@ -32,7 +32,9 @@ public class TickService {
                     Tick prevTick = history.get(s).peek();
                     Tick nextTick = new Tick(s, prevTick.getName(), RandomUtil.bump(prevTick.getPrice()), RandomUtil.bump(prevTick.getVolume()));
 
-                    history.get(prevTick.getName()).add(nextTick);
+                    history.get(prevTick.getSymbol()).add(nextTick);
+
+                    LOGGER.info("Updated [symbol: '{}', price: '{}', volume: '{}']", s, nextTick.getPrice(), nextTick.getVolume());
 
                     return nextTick;
                 });
