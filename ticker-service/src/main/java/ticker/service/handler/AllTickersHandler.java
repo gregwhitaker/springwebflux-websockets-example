@@ -19,7 +19,7 @@ public class AllTickersHandler implements WebSocketHandler {
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
-        return session.send(tickService.getAll()
+        return session.send(tickService.getAll(true)
                 .map(tick -> {
                     try {
                         return session.textMessage(mapper.writeValueAsString(tick));
