@@ -16,7 +16,7 @@ Follow the steps below to run the example application:
 
         ./gradlew :ticker-service:bootRun
         
-2. In a new terminal, run the following command to stream all stock tickers:
+2. In a new terminal, run the following command to start the `ticker-client` and stream all stock tickers:
 
         ./gradlew :ticker-client:bootRun
         
