@@ -9,6 +9,7 @@ import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Mono;
 import ticker.service.handler.model.TickRequest;
+import ticker.service.handler.model.TickResponse;
 import ticker.service.service.TickService;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class TickerHandler implements WebSocketHandler {
                 .map(tickRequest -> tickService.get(tickRequest.getSymbol()))
                 .flatMap(tickFlux -> tickFlux.map(tick -> {
                     try {
-                        return session.textMessage(mapper.writeValueAsString(tick));
+                        return session.textMessage(mapper.writeValueAsString(TickResponse.from(tick)));
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
