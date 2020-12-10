@@ -1,4 +1,6 @@
 # springwebflux-websockets-example
+![Build](https://github.com/gregwhitaker/springwebflux-websockets-example/workflows/Build/badge.svg)
+
 An example of a reactive application using WebSockets and Spring WebFlux.
 
 This example has a ticker service that generates stock prices and a client that allows you to get the changes for all stock tickers
