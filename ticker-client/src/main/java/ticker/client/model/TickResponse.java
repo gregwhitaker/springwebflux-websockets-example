@@ -1,6 +1,8 @@
 package ticker.client.model;
 
-public class TickResponse {
+import java.io.Serializable;
+
+public class TickResponse implements Serializable {
 
     private String timestamp;
     private String symbol;

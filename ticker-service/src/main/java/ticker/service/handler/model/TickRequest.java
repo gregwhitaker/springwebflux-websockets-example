@@ -1,6 +1,8 @@
 package ticker.service.handler.model;
 
-public class TickRequest {
+import java.io.Serializable;
+
+public class TickRequest implements Serializable {
 
     private String symbol;
 

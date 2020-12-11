@@ -12,7 +12,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient;
 import org.springframework.web.reactive.socket.client.WebSocketClient;
 import reactor.core.publisher.Mono;
@@ -25,7 +24,7 @@ import java.net.URI;
 public class TickerClientApplication {
     private static final Logger LOG = LoggerFactory.getLogger(TickerClientApplication.class);
 
-    public static void main(String... args) throws Exception {
+    public static void main(String... args) {
         SpringApplication app = new SpringApplication(TickerClientApplication.class);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
@@ -39,6 +38,8 @@ public class TickerClientApplication {
     @Component
     public class Runner implements CommandLineRunner {
 
+        public static final String WS_TICKERS = "ws://localhost:8080/tickers";
+
         @Override
         public void run(String... args) throws Exception {
             if (args.length == 0) {
@@ -46,7 +47,7 @@ public class TickerClientApplication {
 
                 WebSocketClient client = new ReactorNettyWebSocketClient();
                 client.execute(
-                        URI.create("ws://localhost:8080/tickers"),
+                        URI.create(WS_TICKERS),
                         session -> session.send(
                                 Mono.empty())
                                 .thenMany(session.receive()

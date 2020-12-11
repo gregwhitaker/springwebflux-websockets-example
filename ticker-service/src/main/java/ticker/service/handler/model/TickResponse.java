@@ -1,7 +1,7 @@
 package ticker.service.handler.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serializable;
 import ticker.service.service.model.Tick;
 
 import java.time.ZoneId;
@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
         "price",
         "volume"
 })
-public class TickResponse {
+public class TickResponse implements Serializable {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd hh:mm:ss")
             .withZone(ZoneId.systemDefault());
