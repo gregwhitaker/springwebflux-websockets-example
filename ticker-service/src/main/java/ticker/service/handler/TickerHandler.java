@@ -3,7 +3,6 @@ package ticker.service.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketSession;
@@ -17,12 +16,15 @@ import java.io.IOException;
 @Component
 public class TickerHandler implements WebSocketHandler {
 
-    @Autowired
-    private TickService tickService;
+    private final  TickService tickService;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @Override
+  public TickerHandler(TickService tickService) {
+    this.tickService = tickService;
+  }
+
+  @Override
     public Mono<Void> handle(WebSocketSession session) {
         return session.send(session.receive()
                 .map(webSocketMessage -> {

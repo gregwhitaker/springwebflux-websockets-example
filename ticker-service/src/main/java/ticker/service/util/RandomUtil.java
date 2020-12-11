@@ -4,12 +4,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
 public class RandomUtil {
+
+    public static final String COLLECTION_IS_EMPTY = "Collection is empty";
 
     public static <E> E choice(Collection<? extends E> coll) {
         if (coll.size() == 0) {
-            throw new IllegalArgumentException("Collection is empty");
+            throw new IllegalArgumentException(COLLECTION_IS_EMPTY);
         }
 
         int index = ThreadLocalRandom.current().nextInt(coll.size());
